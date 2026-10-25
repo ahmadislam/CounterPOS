@@ -1,9 +1,9 @@
 # API reference
 
-Base URL: `https://possystem-1-26mq.onrender.com` (combined Angular/API demo).
+Base URL: `https://counterpos-demo.onrender.com` (combined Angular/API demo).
 
-- [Swagger UI](https://possystem-1-26mq.onrender.com/swagger/index.html)
-- [OpenAPI JSON with request/response schemas](https://possystem-1-26mq.onrender.com/swagger/v1/swagger.json)
+- [Swagger UI](https://counterpos-demo.onrender.com/swagger/index.html)
+- [OpenAPI JSON with request/response schemas](https://counterpos-demo.onrender.com/swagger/v1/swagger.json)
 - Local development: `http://localhost:5080/swagger`
 
 Swagger is enabled in [`Program.cs`](../src/PosSystem.Api/Program.cs). The OpenAPI document is the

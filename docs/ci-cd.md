@@ -35,9 +35,9 @@ A separate Vercel frontend is optional. Add a Vercel deploy hook as `VERCEL_DEPL
 
 After deployment, verify:
 
-- [Application](https://possystem-1-26mq.onrender.com/login)
-- [Health endpoint](https://possystem-1-26mq.onrender.com/health)
-- [Swagger UI](https://possystem-1-26mq.onrender.com/swagger/index.html)
-- [OpenAPI document](https://possystem-1-26mq.onrender.com/swagger/v1/swagger.json)
+- [Application](https://counterpos-demo.onrender.com/login)
+- [Health endpoint](https://counterpos-demo.onrender.com/health)
+- [Swagger UI](https://counterpos-demo.onrender.com/swagger/index.html)
+- [OpenAPI document](https://counterpos-demo.onrender.com/swagger/v1/swagger.json)
 
 The combined Docker image serves Angular and the API from the same origin. This keeps routing and refresh-cookie behavior consistent across browsers.

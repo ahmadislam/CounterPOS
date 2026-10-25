@@ -2,7 +2,7 @@
 # Render prompts for the database connection; generated secrets stay in its settings.
 services:
   - type: web
-    name: possystem-demo
+    name: counterpos-demo
     runtime: docker
     plan: free
     branch: main

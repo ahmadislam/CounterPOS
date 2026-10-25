@@ -9,9 +9,9 @@ Point-of-sale and retail management system built with Angular, ASP.NET Core, and
 ![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 
-[Live demo](https://possystem-1-26mq.onrender.com) ·
-[Swagger](https://possystem-1-26mq.onrender.com/swagger/index.html) ·
-[API specification](https://possystem-1-26mq.onrender.com/swagger/v1/swagger.json)
+[Live demo](https://counterpos-demo.onrender.com) ·
+[Swagger](https://counterpos-demo.onrender.com/swagger/index.html) ·
+[API specification](https://counterpos-demo.onrender.com/swagger/v1/swagger.json)
 
 **Select “Explore live demo” to enter without a password.**
 
