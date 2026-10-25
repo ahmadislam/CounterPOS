@@ -109,7 +109,7 @@ public class AuthController(IAuthService auth, IConfiguration configuration, ILo
         configuration.GetSection("Cors:Origins").Get<string[]>() ?? [],
         $"{Request.Scheme}://{Request.Host.ToUriComponent()}");
 
-    // Frontend (Vercel) and API (Render) are on different sites, so SameSite=None + Secure is required.
+    // Approved HTTPS browser clients require a secure cross-site refresh cookie.
     private static CookieOptions CookieOptions(DateTimeOffset expires) => new()
     {
         HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = expires, Path = "/api/auth"

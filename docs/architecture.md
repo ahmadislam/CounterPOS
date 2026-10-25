@@ -32,8 +32,7 @@ flowchart LR
 ```
 
 The Docker image builds and serves both frontend and API. `ClientHosting` serves Angular routes
-but never converts unknown `/api`, `/health`, or `/swagger` routes into SPA HTML. Separate
-Vercel hosting is also supported through `POS_API_ORIGIN` and exact CORS origins.
+but never converts unknown `/api`, `/health`, or `/swagger` routes into SPA HTML.
 Free hosts may sleep: durable jobs survive restarts, but cannot execute while the API is asleep.
 
 ## Clean Architecture dependencies
@@ -367,8 +366,6 @@ flowchart TB
   Hook --> Render["Render Docker service\nAngular + API + Hangfire"]
   Render -->|"TLS / Npgsql"| Neon[("Neon PostgreSQL")]
   Render -->|"TLS / MailKit"| Brevo["SMTP provider"]
-  Gate -->|"Optional separate frontend hook"| Vercel["Vercel Angular SPA"]
-  Vercel -->|"HTTPS REST + exact CORS origin"| Render
 ```
 
 Hook secrets must be configured by a repository administrator, and provider Git auto-deploy

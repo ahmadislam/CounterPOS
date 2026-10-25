@@ -29,8 +29,6 @@ To connect Render:
 
 The hook URL is a credential and must not be committed. If the secret is absent, the deployment step is skipped while all build and test jobs still run.
 
-A separate Vercel frontend is optional. Add a Vercel deploy hook as `VERCEL_DEPLOY_HOOK` only when maintaining a separate frontend deployment.
-
 ## Production checks
 
 After deployment, verify:

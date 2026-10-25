@@ -224,7 +224,7 @@ Required production settings include:
 - `Seed__AdminEmail`
 - `Seed__AdminPassword`
 
-SMTP and passwordless demo access are optional and configured through environment variables. See [docs/free-demo.md](docs/free-demo.md) for the complete Render setup.
+SMTP and passwordless demo access are configured through environment variables in the Render service.
 
 ## Documentation
 
@@ -232,5 +232,4 @@ SMTP and passwordless demo access are optional and configured through environmen
 - [Architecture and database model](docs/architecture.md)
 - [CI/CD](docs/ci-cd.md)
 - [Demo data](docs/demo-data.md)
-- [Render deployment](docs/free-demo.md)
 - [Sample invoice PDF](docs/screenshots/sample-invoice.pdf)
