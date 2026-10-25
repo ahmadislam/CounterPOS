@@ -1,0 +1,95 @@
+<h1>Dashboard</h1>
+<p class="muted">Sales and inventory insights for the last 12 months.</p>
+
+<div class="kpis">
+  <div class="kpi"><span>Sales</span><strong>{{ count() }}</strong></div>
+  <div class="kpi"><span>Gross sales</span><strong>{{ money(revenue()) }}</strong></div>
+  <div class="kpi"><span>Refunds</span><strong>{{ money(refunds()) }}</strong></div>
+  <div class="kpi"><span>Net revenue</span><strong>{{ money(netRevenue()) }}</strong></div>
+  <div class="kpi"><span>Low stock</span><strong>{{ lowStockCount() }}</strong></div>
+</div>
+
+<h2>Monthly gross sales</h2>
+<div class="chart-panel">
+  <app-dashboard-chart [config]="monthlyChart()" description="Monthly gross sales for the last 12 months. Exact values follow in the monthly sales data table." />
+  <details class="chart-data"><summary>View monthly sales data</summary><div class="data-scroll"><table><caption class="sr-only">Monthly gross sales</caption><thead><tr><th scope="col">Month</th><th scope="col">Gross sales</th></tr></thead><tbody>
+    @for (b of monthlyBars(); track b.label) { <tr><th scope="row">{{ b.label }}</th><td>{{ money(b.value) }}</td></tr> }
+  </tbody></table></div></details>
+</div>
+
+<h2>Daily gross sales · last 7 days</h2>
+<div class="chart">
+  @for (b of bars(); track b.label) {
+    <div class="col">
+      <div class="bar" [style.height.%]="b.pct" [title]="money(b.value)"></div>
+      <span>{{ b.label }}</span>
+    </div>
+  }
+</div>
+
+<div class="split">
+  <section>
+    <h2>Top-selling products · gross sales</h2>
+    @if (topProducts().length > 0) {
+      <div class="chart-panel"><app-dashboard-chart [config]="productsChart()" description="Gross sales for the top-selling products ranked by units sold. Exact sales values and quantities follow in the product list." /></div>
+    }
+    <ul>
+      @for (product of topProducts(); track product.sku + ':' + product.productName) {
+        <li class="metric-row">
+          <span class="mono">{{ product.sku }}</span>
+          <span>{{ product.productName }} · {{ product.quantitySold }} sold</span>
+          <strong>{{ money(product.revenue) }}</strong>
+        </li>
+      } @empty {
+        <li class="muted">No product sales in this window.</li>
+      }
+    </ul>
+  </section>
+  <section>
+    <h2>Sales by category · gross sales</h2>
+    @if (categoryBars().length > 0) {
+      <div class="chart-panel"><app-dashboard-chart [config]="categoriesChart()" description="Share of gross sales by product category. Exact sales values and quantities follow in the category list." /></div>
+    }
+    <div class="category-chart">
+      @for (category of categoryBars(); track category.label) {
+        <div class="category-row">
+          <div class="category-label"><span>{{ category.label }} · {{ category.quantity }} items</span><strong>{{ money(category.value) }}</strong></div>
+          <div class="category-track"><div class="category-bar" [style.width.%]="category.pct"></div></div>
+        </div>
+      } @empty {
+        <p class="muted">No category sales in this window.</p>
+      }
+    </div>
+  </section>
+</div>
+
+<div class="split">
+  <section>
+    <h2>Recent invoices</h2>
+    <ul>
+      @for (s of sales().slice(0, 8); track s.id) {
+        <li>
+          <span class="mono">{{ s.invoiceNumber }}</span>
+          <span>{{ s.saleDate | date:'short' }}</span>
+          <strong>{{ money(s.totalAmount) }}</strong>
+        </li>
+      } @empty {
+        <li class="muted">No sales in this window.</li>
+      }
+    </ul>
+  </section>
+  <section>
+    <h2>Low stock</h2>
+    <ul>
+      @for (p of lowStock(); track p.id) {
+        <li>
+          <span class="mono">{{ p.sku }}</span>
+          <span>{{ p.name }}</span>
+          <strong>{{ p.stockQuantity }}</strong>
+        </li>
+      } @empty {
+        <li class="muted">Nothing below threshold.</li>
+      }
+    </ul>
+  </section>
+</div>

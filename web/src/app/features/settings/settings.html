@@ -1,0 +1,165 @@
+<h1>Settings</h1>
+<p class="muted">Manage staff access and configure the recipient for email reports and alerts.</p>
+
+@if (auth.isDemo()) {
+  <p class="demo-notice">Portfolio demo mode shows the complete configuration. Administrative changes are read-only so every reviewer sees a stable demo.</p>
+}
+
+<section class="panel">
+  <h2>Email delivery</h2>
+  @if (email(); as config) {
+    <p>
+      SMTP status:
+      <strong [class.enabled]="config.smtpEnabled" [class.disabled]="!config.smtpEnabled">
+        {{ config.smtpEnabled ? 'Enabled on server' : 'Not configured / disabled' }}
+      </strong>
+    </p>
+    @if (!config.smtpEnabled) {
+      <p class="muted">Configure SMTP host, port, sender, TLS, and credentials as server environment secrets; then set Email__Enabled=true and restart the API.</p>
+    }
+    <label>Manager email recipient
+      <input type="email" required maxlength="200" [(ngModel)]="managerEmail" placeholder="manager@example.com" />
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" [(ngModel)]="alertsEnabled" />
+      Send low-stock alerts (requires SMTP to be enabled)
+    </label>
+    <div class="actions">
+      <button type="button" [disabled]="savingEmail() || auth.isDemo()" (click)="saveEmailSettings()">
+        {{ savingEmail() ? 'Saving…' : 'Save email settings' }}
+      </button>
+      @if (auth.role() === 'Admin') {
+        <button type="button" class="ghost" [disabled]="testingEmail() || !config.smtpEnabled || !managerEmail || auth.isDemo()" (click)="sendTestEmail()">
+          {{ testingEmail() ? 'Sending…' : 'Send test email' }}
+        </button>
+      }
+    </div>
+    <p class="muted">Daily reports are sent at midnight UTC for the previous UTC day when SMTP is enabled. Test mail goes to the configured manager address.</p>
+  } @else {
+    <p class="muted">Loading email settings…</p>
+  }
+</section>
+
+<section class="panel">
+  <h2>Background job queue</h2>
+  @if (jobStatus(); as jobs) {
+    <p>Failed: <strong>{{ jobs.failed }}</strong> · Enqueued: {{ jobs.enqueued }} · Scheduled: {{ jobs.scheduled }}</p>
+    @if (jobs.failed > 0) {
+      <p class="muted">Failed job details remain in the protected Hangfire storage. Review service logs and retry jobs after resolving the cause.</p>
+    }
+  } @else {
+    <p class="muted">Loading protected job status…</p>
+  }
+</section>
+
+<section class="panel">
+  <h2>Low-stock alerts</h2>
+  @for (alert of lowStockAlerts(); track alert.id) {
+    <p>
+      <strong>{{ alert.sku }} · {{ alert.productName }}</strong> —
+      {{ alert.stockQuantity }} in stock (threshold {{ alert.minStockThreshold }}) ·
+      @if (alert.resolvedAt) { Resolved } @else if (alert.sentAt) { Email sent } @else { Pending email }
+      · Attempts: {{ alert.deliveryAttempts }}
+    </p>
+  } @empty {
+    <p class="muted">No low-stock alert records.</p>
+  }
+</section>
+
+<section class="panel">
+  <h2>Coupons</h2>
+  <form class="create-form" (ngSubmit)="createCoupon()">
+    <label>Code <input name="couponCode" required maxlength="40" [(ngModel)]="couponCode" /></label>
+    <label>Name <input name="couponName" required maxlength="200" [(ngModel)]="couponName" /></label>
+    <label>Discount type
+      <select name="couponType" [(ngModel)]="couponIsPercentage">
+        <option [ngValue]="false">Fixed amount</option><option [ngValue]="true">Percentage</option>
+      </select>
+    </label>
+    <label>{{ couponIsPercentage ? 'Percent' : 'Amount' }}
+      <input name="couponValue" type="number" min="0.01" [max]="couponIsPercentage ? 100 : 1000000000" step="0.01" required [(ngModel)]="couponValue" />
+    </label>
+    <label>Starts <input name="couponStarts" type="datetime-local" required [(ngModel)]="couponStartsAt" /></label>
+    <label>Ends <input name="couponEnds" type="datetime-local" required [(ngModel)]="couponEndsAt" /></label>
+    <button type="submit" [disabled]="auth.isDemo()">Create coupon</button>
+  </form>
+  <p class="muted">Coupon discount is applied after item discounts and before loyalty redemption. Redemption is limited and dates use UTC.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Code</th><th>Name</th><th>Discount</th><th>Valid until (UTC)</th><th>Redemptions</th><th>Status</th></tr></thead>
+      <tbody>
+        @for (coupon of coupons(); track coupon.id) {
+          <tr><td>{{ coupon.code }}</td><td>{{ coupon.name }}</td><td>{{ coupon.isPercentage ? coupon.value + '%' : coupon.value }}</td>
+            <td>{{ coupon.endsAt | date:'short':'UTC' }}</td>
+            <td>{{ coupon.redemptionCount }}{{ coupon.maxRedemptions ? ' / ' + coupon.maxRedemptions : '' }}</td>
+            <td>
+              {{ coupon.isActive ? 'Active' : 'Inactive' }}
+              <button type="button" class="tiny" [disabled]="auth.isDemo()" (click)="toggleCoupon(coupon)">
+                {{ coupon.isActive ? 'Deactivate' : 'Activate' }}
+              </button>
+            </td></tr>
+        } @empty { <tr><td colspan="6" class="empty">No coupons configured.</td></tr> }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Loyalty rules</h2>
+  <div class="create-form">
+    <label>Points earned per currency unit
+      <input type="number" min="1" max="1000" step="1" [(ngModel)]="loyaltyRules().earnPointsPerCurrencyUnit" />
+    </label>
+    <label>Points required per currency unit of redemption
+      <input type="number" min="1" max="10000" step="1" [(ngModel)]="loyaltyRules().redemptionPointsPerCurrencyUnit" />
+    </label>
+    <button type="button" [disabled]="auth.isDemo()" (click)="saveLoyaltyRules()">Save loyalty rules</button>
+  </div>
+  <p class="muted">Points are earned on discounted pre-tax amounts. Redemption must be a multiple of the configured points-per-currency rate.</p>
+</section>
+
+@if (auth.role() === 'Admin') {
+  <section class="panel">
+    <h2>Staff accounts</h2>
+    <form class="create-form" (ngSubmit)="createStaff()">
+      <label>Username <input name="username" required minlength="3" maxlength="50" [(ngModel)]="username" /></label>
+      <label>Email <input name="staffEmail" type="email" required maxlength="200" [(ngModel)]="staffEmail" /></label>
+      <label>Temporary password <input name="password" type="password" required minlength="12" maxlength="128" [(ngModel)]="password" /></label>
+      <label>Role
+        <select name="role" [(ngModel)]="role">
+          <option value="Cashier">Cashier</option>
+          <option value="Manager">Manager</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </label>
+      <button type="submit" [disabled]="auth.isDemo()">Create account</button>
+    </form>
+    <p class="muted">Passwords require at least 12 characters. Passwords are hashed; existing passwords cannot be viewed. Role/status changes and password resets revoke refresh sessions; already-issued access tokens expire within the configured token lifetime.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Reset password</th></tr></thead>
+        <tbody>
+          @for (user of staff(); track user.id) {
+            <tr>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <select [ngModel]="user.role" [disabled]="auth.isDemo()" (ngModelChange)="updateStaff(user, $event, user.isActive)">
+                  <option value="Cashier">Cashier</option><option value="Manager">Manager</option><option value="Admin">Admin</option>
+                </select>
+              </td>
+              <td><label class="checkbox"><input type="checkbox" [ngModel]="user.isActive" [disabled]="auth.isDemo()" (ngModelChange)="updateStaff(user, user.role, $event)" /> Active</label></td>
+              <td>{{ user.createdAt | date:'mediumDate' }}</td>
+              <td class="password-cell">
+                <input type="password" [attr.aria-label]="'New password for ' + user.username" minlength="12" maxlength="128" [(ngModel)]="passwordDrafts[user.id]" placeholder="12+ characters" />
+                <button type="button" class="tiny" [disabled]="auth.isDemo()" (click)="resetPassword(user)">Reset</button>
+              </td>
+            </tr>
+          } @empty {
+            @if (!loading()) { <tr><td colspan="6" class="empty">No staff accounts found.</td></tr> }
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}
