@@ -7,6 +7,12 @@ the checkout UI. No production records or provider credentials are used.
 - `dashboard.png`: Chart.js monthly revenue, top products, category sales, and existing metrics.
 - `pos.png`: populated catalog, active shift, quantity controls, tender and checkout.
 - `invoice.png`: first page of `sample-invoice.pdf`.
+- `register-workflow.png`: product search, catalog, cart, and checkout overview.
+- `payment-options.png`: cash, card, and online payment selection.
+- `inventory-alerts.png`: inventory overview and low-stock indicators.
+- `analytics-overview.png`: revenue and sales analytics.
+- `customer-loyalty.png`: customer records and loyalty controls.
+- `reporting-exports.png`: invoice and report export presentation.
 
 To refresh the captures, install the repository dependencies, build the API in Release mode,
 install Chromium using Playwright (or set `CHROMIUM_EXECUTABLE_PATH`), and install Poppler's

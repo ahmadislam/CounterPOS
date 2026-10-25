@@ -30,8 +30,48 @@ The public demo contains sample data. Configuration pages can be viewed, but sen
 </p>
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/ahmadislam/CounterPOS/main/docs/media/CounterPOS-Demo.mp4"><strong>Watch the 36-second walkthrough</strong></a>
+  <a href="https://raw.githubusercontent.com/ahmadislam/CounterPOS/main/docs/media/CounterPOS-Demo.mp4"><strong>Watch the 40-second product tour with sound</strong></a>
 </p>
+
+### Workflow highlights
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/checkout-flow.gif" alt="CounterPOS checkout and payment workflow"></td>
+    <td width="50%"><img src="docs/media/operations-overview.gif" alt="CounterPOS inventory, analytics, and customer management workflow"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Checkout and payments</strong><br>Search, cart management, and flexible payment recording.</td>
+    <td align="center"><strong>Store operations</strong><br>Inventory alerts, analytics, and customer loyalty.</td>
+  </tr>
+</table>
+
+### Product tour
+
+<table>
+  <tr>
+    <td width="33%"><img src="docs/screenshots/register-workflow.png" alt="CounterPOS register workflow"></td>
+    <td width="33%"><img src="docs/screenshots/payment-options.png" alt="CounterPOS payment options"></td>
+    <td width="33%"><img src="docs/screenshots/inventory-alerts.png" alt="CounterPOS inventory and low-stock alerts"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Register</strong></td>
+    <td align="center"><strong>Payments</strong></td>
+    <td align="center"><strong>Inventory</strong></td>
+  </tr>
+  <tr>
+    <td width="33%"><img src="docs/screenshots/analytics-overview.png" alt="CounterPOS revenue analytics"></td>
+    <td width="33%"><img src="docs/screenshots/customer-loyalty.png" alt="CounterPOS customer loyalty management"></td>
+    <td width="33%"><img src="docs/screenshots/reporting-exports.png" alt="CounterPOS invoices and report exports"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Analytics</strong></td>
+    <td align="center"><strong>Customer loyalty</strong></td>
+    <td align="center"><strong>Reports and exports</strong></td>
+  </tr>
+</table>
+
+### Application screens
 
 ![Sales dashboard](docs/screenshots/dashboard.png)
 
